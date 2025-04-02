@@ -7,11 +7,21 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  generate-sbom:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Generate SBOM with cdxgen
-      uses: CycloneDX/cdxgen-action@v1
-      with:
-        output: sbom.json
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Generate SBOM
+        uses: CycloneDX/gh-node-module-generatebom@master
+        with:
+          path: ./
+          output: ./sbom.cyclonedx.json
+
+      - name: Upload SBOM as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: sbom-file
+          path: ./sbom.cyclonedx.json
+          retention-days: 30
