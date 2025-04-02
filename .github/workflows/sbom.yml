@@ -13,11 +13,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Generate SBOM
-        uses: CycloneDX/gh-node-module-generatebom@master
+      - name: Set up JDK
+        uses: actions/setup-java@v3
         with:
-          path: ./
-          output: ./sbom.cyclonedx.json
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Generate SBOM with cdxgen
+        run: |
+          npm install -g @cyclonedx/cdxgen
+          cdxgen -t maven -o sbom.cyclonedx.json .
 
       - name: Upload SBOM as artifact
         uses: actions/upload-artifact@v4
