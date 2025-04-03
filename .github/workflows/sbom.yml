@@ -35,6 +35,11 @@ jobs:
     needs: generate-sbom
     runs-on: ubuntu-latest
     steps:
+        - name: Download SBOM artifact
+          uses: actions/download-artifact@v4
+          with:
+            name: sbom-file
+            
         - name: Import SBOM to Dependency Track
           uses: DependencyTrack/gh-upload-sbom@v3
           with:
