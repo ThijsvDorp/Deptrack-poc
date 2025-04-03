@@ -40,14 +40,25 @@ jobs:
           with:
             name: sbom-file
 
-        - name: Import SBOM to Dependency Track
-          uses: DependencyTrack/gh-upload-sbom@v3
-          with:
-            serverHostname: "dtrack-development.stpst.nl"
-            apiKey: ${{ secrets.DEPTRACK_APIKEY }}
-            projectName: 'Dependency-Track-PoC'
-            projectVersion: 'v1'
-            bomFileName: ./sbom.cyclonedx.json
-            autoCreate: true
+        - name: Import SBOM to Dependency Track using CURL
+          run: |
+            # Base64 encode the SBOM file
+            SBOM_BASE64=$(base64 -w0 sbom.cyclonedx.json)
+            
+            # Create JSON payload
+            cat > payload.json << EOF
+            {
+              "project": "Dependency-Track-PoC",
+              "version": "v1",
+              "autoCreate": true,
+              "bom": "$SBOM_BASE64"
+            }
+            EOF
+            
+            # Send the request to Dependency Track
+            curl -X PUT "https://dtrack-development.stpst.nl/api/v1/bom" \
+              -H "Content-Type: application/json" \
+              -H "X-API-Key: ${{ secrets.DEPTRACK_APIKEY }}" \
+              -d @payload.json
           env:
-            GH_UPLOAD_SBOM_DEBUG: "true"
+            CURL_VERBOSE: "true"
