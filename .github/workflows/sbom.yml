@@ -39,23 +39,12 @@ jobs:
           uses: actions/download-artifact@v4
           with:
             name: sbom-file
-            
-        - name: Debug SBOM file
-          run: |
-            echo "Checking if SBOM file exists:"
-            ls -la
-            echo "File size and metadata:"
-            stat sbom.cyclonedx.json
-            echo "SBOM file content preview (first 20 lines):"
-            head -n 20 sbom.cyclonedx.json
-            echo "JSON validation:"
-            cat sbom.cyclonedx.json | jq . > /dev/null && echo "JSON is valid" || echo "JSON is invalid"
 
         - name: Import SBOM to Dependency Track
           uses: DependencyTrack/gh-upload-sbom@v3
           with:
             serverHostname: 'dtrack-development.stpst.nl'
-            apiKey: ${{ secrets.DEPTRACK_APIKEY }}
+            apiKey: odt_Pm5fOzKeJl0EnQYk0VwuIcLpct26noK1
             projectName: 'Dependency-Track-PoC'
             projectVersion: 'v1'
             bomFileName: ./sbom.cyclonedx.json
