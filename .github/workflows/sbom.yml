@@ -39,6 +39,19 @@ jobs:
           uses: actions/download-artifact@v4
           with:
             name: sbom-file
+            
+        - name: Debug API Key (masked)
+          run: |
+            echo "API key length: ${#API_KEY}"
+            echo "API key first 4 chars: ${API_KEY:0:4}..."
+          env:
+            API_KEY: ${{ secrets.DEPTRACK_APIKEY }}
+            
+        - name: Test API authentication
+          run: |
+            echo "Testing API authentication with Dependency-Track server"
+            curl -X GET -H "X-API-Key: ${{ secrets.DEPTRACK_APIKEY }}" https://dtrack-development.stpst.nl/api/version
+          continue-on-error: true
 
         - name: Import SBOM to Dependency Track
           uses: DependencyTrack/gh-upload-sbom@v3
@@ -52,8 +65,8 @@ jobs:
           env:
             GH_UPLOAD_SBOM_DEBUG: "true"
 
-        - name: Test API connection (if import fails)
+        - name: Test API connection with verbose output
           if: failure()
           run: |
-            echo "Testing API connection to Dependency-Track server"
-            curl -I -X GET https://dtrack-development.stpst.nl/api/version
+            echo "Testing API connection with verbose output"
+            curl -v -H "X-API-Key: ${{ secrets.DEPTRACK_APIKEY }}" https://dtrack-development.stpst.nl/api/version
