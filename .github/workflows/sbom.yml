@@ -42,10 +42,8 @@ jobs:
 
         - name: Import SBOM to Dependency Track using CURL
           run: |
-            # Base64 encode the SBOM file
             SBOM_BASE64=$(base64 -w0 sbom.cyclonedx.json)
             
-            # Create JSON payload
             cat > payload.json << EOF
             {
               "project": "Dependency-Track-PoC",
@@ -55,7 +53,6 @@ jobs:
             }
             EOF
             
-            # Send the request to Dependency Track
             curl -X PUT "https://dtrack-development.stpst.nl/api/v1/bom" \
               -H "Content-Type: application/json" \
               -H "X-API-Key: ${{ secrets.DEPTRACK_APIKEY }}" \
