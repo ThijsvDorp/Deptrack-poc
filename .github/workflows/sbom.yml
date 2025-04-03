@@ -49,3 +49,11 @@ jobs:
             projectVersion: 'master'
             bomFileName: ./sbom.cyclonedx.json
             autoCreate: true
+          env:
+            GH_UPLOAD_SBOM_DEBUG: "true"
+
+        - name: Test API connection (if import fails)
+          if: failure()
+          run: |
+            echo "Testing API connection to Dependency-Track server"
+            curl -I -X GET https://dtrack-development.stpst.nl/api/version
