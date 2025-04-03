@@ -30,7 +30,9 @@ jobs:
           name: sbom-file
           path: ./sbom.cyclonedx.json
           retention-days: 30
+
   import-sbom-deptrack:
+    needs: generate-sbom
     runs-on: ubuntu-latest
     steps:
         - name: Import SBOM to Dependency Track
