@@ -56,7 +56,7 @@ jobs:
         - name: Import SBOM to Dependency Track
           uses: DependencyTrack/gh-upload-sbom@v3
           with:
-            serverHostname: 'dtrack-development.stpst.nl'
+            serverHostname: 'https://dtrack-development.stpst.nl'
             apiKey: ${{ secrets.DEPTRACK_APIKEY }}
             projectName: 'Dependency-Track-PoC'
             projectVersion: 'master'
