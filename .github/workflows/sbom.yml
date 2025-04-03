@@ -44,11 +44,10 @@ jobs:
           uses: DependencyTrack/gh-upload-sbom@v3
           with:
             serverHostname: 'dtrack-development.stpst.nl'
-            apiKey: ${API_KEY}
+            apiKey: ${{ secrets.DEPTRACK_APIKEY }}
             projectName: 'Dependency-Track-PoC'
             projectVersion: 'v1'
             bomFileName: ./sbom.cyclonedx.json
             autoCreate: true
           env:
             GH_UPLOAD_SBOM_DEBUG: "true"
-            API_KEY: ${{ secrets.DEPTRACK_APIKEY }}
