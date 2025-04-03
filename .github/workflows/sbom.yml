@@ -30,3 +30,15 @@ jobs:
           name: sbom-file
           path: ./sbom.cyclonedx.json
           retention-days: 30
+  import-sbom-deptrack:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Import SBOM to Dependency Track
+          uses: DependencyTrack/gh-upload-sbom@v3
+          with:
+            serverHostname: 'dtrack-development.stpst.nl'
+            apiKey: $ {{ secrets.DEPTRACK_APIKEY }}
+            projectName: 'Dependency-Track-PoC'
+            projectVersion: 'master'
+            bomFileName: ./sbom.cyclonedx.json
+            autoCreate: true
